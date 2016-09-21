@@ -11,7 +11,7 @@ public class CheckTryWithResources {
       return "normallyExecuted";
     } catch (Exception ex) {
       handleException(cfg.failOnExceptionHandling);
-      return "exceptionHandeled";
+      return "exceptionHandled";
     } finally {
       doFinally(cfg.failOnFinally);
       if (cfg.returnInFinally) {
