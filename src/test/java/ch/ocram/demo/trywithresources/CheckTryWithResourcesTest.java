@@ -37,6 +37,12 @@ public class CheckTryWithResourcesTest {
 
   private String whatDoYouThink(Config config) {
     // Implement your logic here to determine what you'll expect to happen
+
+    if (config.failOnGetResource) {
+      // It will be handeled by the exception handler of the try-with-resources statement
+      return "exceptionHandeled";
+    }
+
     return null;
   }
 }
