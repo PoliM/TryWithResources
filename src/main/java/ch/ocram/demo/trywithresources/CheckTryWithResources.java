@@ -5,6 +5,7 @@ import java.io.IOException;
 
 public class CheckTryWithResources {
 
+  // tag::doSomething[]
   public String doSomething(Config cfg) throws IOException {
     try (Closeable c = getResource(cfg.failOnGetResource, cfg.failOnClose)) {
       callSomeBusinessLogic(cfg.failOnBusinessLogic);
@@ -19,6 +20,7 @@ public class CheckTryWithResources {
       }
     }
   }
+  // end::doSomething[]
 
   private void doFinally(boolean failOnFinally) {
     if (failOnFinally) {

@@ -5,6 +5,7 @@ import java.util.BitSet;
 /**
  * Represents one test scenario.
  */
+// tag::Config[]
 public class Config {
 
   public static final int NUMBER_OF_CASES = 64;
@@ -15,6 +16,7 @@ public class Config {
   public final boolean failOnExceptionHandling;
   public final boolean failOnFinally;
   public final boolean returnInFinally;
+  // end::Config[]
 
   private Config(boolean failOnGetResource, boolean failOnClose, boolean failOnBusinessLogic, boolean failOnExceptionHandling,
                  boolean failOnFinally, boolean returnInFinally) {

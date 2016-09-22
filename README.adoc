@@ -1,0 +1,59 @@
+== Try with resources, catch and finally
+
+If you ever wondered how the try-catch clause behaves in obscure situations here is an example to experiment with:
+
+[source,java]
+.doSomething method in CheckTryWithResources.java
+====
+include::src/main/java/ch/ocram/demo/trywithresources/CheckTryWithResources.java[tags=doSomething]
+====
+
+Each of the methods `getResource`, `callSomeBusinessLogic`, `handleException` and `doFinally` can be configured to throw an exception.
+This is controlled by the `Config` you pass to the `doSomething` method:
+
+[source,java]
+.Parts of Config.java
+====
+include::src/main/java/ch/ocram/demo/trywithresources/Config.java[tags=Config]
+====
+
+There are 64 combinations and to see what happens in each of them, there is a test.
+They are created as dynamic JUnit 5 tests:
+
+[source,java]
+.createDynamicTests method of CheckTryWithResourcesTest.java
+====
+include::src/test/java/ch/ocram/demo/trywithresources/CheckTryWithResourcesTest.java[tags=testFactory]
+====
+
+The test method itself just calls `doSomething` with the configuration and returns either the String from the returned result or the message of the exception thrown:
+
+[source,java]
+.test method of CheckTryWithResourcesTest.java
+====
+include::src/test/java/ch/ocram/demo/trywithresources/CheckTryWithResourcesTest.java[tags=test]
+====
+
+And here is your homework :-)
+Fill in the `whatDoYouThink` method so that it returns the correct String for the different situations. There is already a simple example.
+
+[source,java]
+.whatDoYouThink method of CheckTryWithResourcesTest.java
+====
+include::src/test/java/ch/ocram/demo/trywithresources/CheckTryWithResourcesTest.java[tags=whatDoYouThink]
+====
+
+In case your IDE does not yet support JUnit 5, you can build and run the tests from the shell:
+
+ ./gradlew clean build
+
+If you want to peek, there is a possible solution in the `solution` branch.
+
+== Branch coverage
+
+The gradle build also measures the coverage using `jacoco`.
+If you look at the report which is in `build/reports/coverage/index.html` you will find that the `CheckTryWithResources` class only covers four out of eight possible paths when catching exceptions.
+
+To be continued...
+
+https://docs.oracle.com/javase/specs/jls/se8/html/jls-14.html#jls-14.20
