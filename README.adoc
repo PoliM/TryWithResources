@@ -53,7 +53,50 @@ If you want to peek, there is a possible solution in the `solution` branch.
 
 The gradle build also measures the coverage using `jacoco`.
 If you look at the report which is in `build/reports/coverage/index.html` you will find that the `CheckTryWithResources` class only covers four out of eight possible paths when catching exceptions.
+And comparing this to the coverage of `SimpleTry` you will see that it doesn't even have branches.
 
-To be continued...
+The reason is that try-with-resources does some stuff under the hood to handle the creation and closing of the resources. You can read about it here:
+https://docs.oracle.com/javase/specs/jls/se8/html/jls-14.html#jls-TryWithResourcesStatement
 
-https://docs.oracle.com/javase/specs/jls/se8/html/jls-14.html#jls-14.20
+If you analyze the byte-code you will see that one additional path is when the resource is null. I added another example to analyze this behaviour:
+
+[source,java]
+.whatDoYouThink method of CheckTryWithResourcesTest.java
+====
+include::src/main/java/ch/ocram/demo/trywithresources/SimpleTryWithResources.java[]
+====
+
+The coverage on this one still misses one out of four paths. Now let's have a look at the byte-code.
+
+ javap -c build/classes/main/ch/ocram/demo/trywithresources/SimpleTryWithResources.class
+
+ public void doSomething(boolean, boolean) throws java.io.IOException;
+   Code:
+      0: aload_0
+      1: iload_1
+      2: iload_2
+      3: invokespecial #2                  // Method getResource:(ZZ)Ljava/io/Closeable;
+      6: astore_3
+      7: aconst_null
+      8: astore        4
+     10: aload_3
+     11: ifnull        46
+     14: aload         4
+     16: ifnull        40
+     19: aload_3
+     20: invokeinterface #3,  1            // InterfaceMethod java/io/Closeable.close:()V
+     25: goto          46
+     28: astore        5
+     30: aload         4
+     32: aload         5
+     34: invokevirtual #5                  // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     37: goto          46
+     40: aload_3
+     41: invokeinterface #3,  1            // InterfaceMethod java/io/Closeable.close:()V
+     46: return
+   Exception table:
+      from    to  target type
+         19    25    28   Class java/lang/Throwable
+
+On lines 7 and 8 it stores null into the local variable 4, then on lines 14 and 16 it jumps to 40 if it is null.
+But that is always the case and so we will always have one path missing in the coverage.
