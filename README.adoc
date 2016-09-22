@@ -61,7 +61,7 @@ https://docs.oracle.com/javase/specs/jls/se8/html/jls-14.html#jls-TryWithResourc
 If you analyze the byte-code you will see that one additional path is when the resource is null. I added another example to analyze this behaviour:
 
 [source,java]
-.whatDoYouThink method of CheckTryWithResourcesTest.java
+.SimpleTryWithResources.java
 ====
 include::src/main/java/ch/ocram/demo/trywithresources/SimpleTryWithResources.java[]
 ====
@@ -100,3 +100,7 @@ The coverage on this one still misses one out of four paths. Now let's have a lo
 
 On lines 7 and 8 it stores null into the local variable 4, then on lines 14 and 16 it jumps to 40 if it is null.
 But that is always the case and so we will always have one path missing in the coverage.
+
+I modified the original `CheckTryWithResources` example to add the case where the resource is null and it brings down the paths coverage to 2/8 missing.
+As far as I can see, there is no way around that.
+ 
