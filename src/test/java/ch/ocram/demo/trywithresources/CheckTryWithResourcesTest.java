@@ -19,14 +19,17 @@ public class CheckTryWithResourcesTest {
     // workaround so that this class will be recognized as test
   }
 
+  // tag::testFactory[]
   @TestFactory
   @DisplayName("all configurations")
-  public Stream<DynamicTest> ads() {
+  public Stream<DynamicTest> createDynamicTests() {
     return IntStream.range(0, Config.NUMBER_OF_CASES)
       .mapToObj(value -> Config.from(value))
       .map(config -> DynamicTest.dynamicTest(config.toDisplayName(), () -> assertEquals(whatDoYouThink(config), test(config))));
   }
+  // end::testFactory[]
 
+  // tag::test[]
   private String test(Config config) throws IOException {
     try {
       return new CheckTryWithResources().doSomething(config);
@@ -34,7 +37,9 @@ public class CheckTryWithResourcesTest {
       return ex.getMessage();
     }
   }
+  // end::test[]
 
+  // tag::whatDoYouThink[]
   private String whatDoYouThink(Config config) {
     // Implement your logic here to determine what you'll expect to happen
 
@@ -45,4 +50,5 @@ public class CheckTryWithResourcesTest {
 
     return null;
   }
+  // end::whatDoYouThink[]
 }
